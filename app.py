@@ -1,15 +1,14 @@
 import os
 from flask import Flask, request, Response
-import smtplib
 from email.message import EmailMessage
 
 app = Flask(__name__)
 
 # =========================
-# EMAIL CONFIG
+# CONFIG EMAIL (păstrat, dar NU trimitem)
 # =========================
 EMAIL_FROM = "omntest923@gmail.com"
-EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")  # setată în Render
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")  # NU se folosește în test
 
 EMAIL_TO = [
     "rca.baar@omniasig.ro",
@@ -32,7 +31,7 @@ def form():
     try:
         if request.method == "POST":
 
-            # ---- date formular ----
+            # -------- date din formular --------
             nr_caz = request.form.get("nr_caz_baar", "")
             sasiu = request.form.get("sasiu_auto", "")
             data_start = request.form.get("data_start", "")
@@ -41,9 +40,9 @@ def form():
             tip_proprietar = request.form.get("tip_proprietar", "")
             proprietar_auto = request.form.get("proprietar_auto", "")
 
-            # ---- email text ----
+            # -------- construim email (doar în memorie) --------
             text_email = f"""
-Procedura BAAR OMNIASIG – documente primite
+Procedura BAAR OMNIASIG – documente primite (TEST – fără trimitere email)
 
 Nr. Caz BAAR: {nr_caz}
 Șasiu auto: {sasiu}
@@ -62,7 +61,7 @@ Proprietar auto: {proprietar_auto}
             msg["To"] = ", ".join(EMAIL_TO)
             msg.set_content(text_email)
 
-            # ---- atașamente (din memorie) ----
+            # -------- atașamente (test) --------
             for f in request.files.values():
                 if f and f.filename:
                     msg.add_attachment(
@@ -72,24 +71,28 @@ Proprietar auto: {proprietar_auto}
                         filename=f.filename
                     )
 
-            # ---- trimitere email ----
-            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-                smtp.login(EMAIL_FROM, EMAIL_PASSWORD)
-                smtp.send_message(msg)
+            # ❌ TRIMITERE EMAIL DEZACTIVATĂ (TEST)
+            # import smtplib
+            # with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+            #     smtp.login(EMAIL_FROM, EMAIL_PASSWORD)
+            #     smtp.send_message(msg)
 
-            return Response("✅ Documentele au fost trimise cu succes.", mimetype="text/plain")
+            return Response(
+                "✅ Formular trimis cu succes (TEST – fără email).",
+                mimetype="text/plain"
+            )
 
-        # ---- afișare formular (GET) ----
+        # -------- GET: afișare formular --------
         with open(HTML_PATH, encoding="utf-8") as f:
             return Response(f.read(), mimetype="text/html")
 
     except Exception as e:
-        # IMPORTANT: afișează eroarea în Render Logs
-        return Response(f"Internal Server Error: {str(e)}", status=500, mimetype="text/plain")
+        # afișăm eroarea exactă în caz de problemă
+        return Response(f"Internal Server Error: {str(e)}", status=500)
 
 
 # =========================
-# START
+# START APLICAȚIE
 # =========================
 if __name__ == "__main__":
     app.run()
