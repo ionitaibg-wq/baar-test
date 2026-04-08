@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Procedura BAAR OMNIASIG</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+}
+.container {
+    width: 900px;
+    margin: 30px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+h1, h2 {
+    text-align: center;
+    color: #003a8f;
+}
+label {
+    font-weight: bold;
+    margin-top: 15px;
+    display: block;
+}
+input, select, button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+button {
+    background-color: #005baa;
+    color: white;
+    border: none;
+    margin-top: 25px;
+    cursor: pointer;
+}
+.hidden { display: none; }
+
+.info-box {
+    background: #f0f4ff;
+    padding: 20px;
+    border-left: 5px solid #005baa;
+    margin-bottom: 30px;
+}
+</style>
+
+<script>
+function toggleIntermediar() {
+    let val = document.getElementById("intermediar").value;
+    let show = (val === "broker" || val === "agent");
+    document.getElementById("mandat").classList.toggle("hidden", !show);
+    document.getElementById("cod_raf").classList.toggle("hidden", !show);
+}
+
+function toggleLeasing() {
+    let val = document.getElementById("proprietar").value;
+    document.getElementById("leasing_doc").classList.toggle("hidden", val !== "leasing");
+}
+
+function toggleGDPR() {
+    let val = document.getElementById("tip_proprietar").value;
+    document.getElementById("gdpr_box").classList.toggle("hidden", val !== "pf");
+}
+</script>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Procedura BAAR OMNIASIG</h1>
+
+<!-- ================= INFORMARE ================= -->
+<div class="info-box">
+<h2>Informare – Documente necesare pentru emiterea poliței</h2>
+
+<p>Pentru emiterea poliței, vă rugăm să încărcați următoarele documente:</p>
+
+<ol>
+<li><strong>Dovada plății</strong> – detaliile de plată se regăsesc mai jos;</li>
+<li><strong>Data de start a poliței</strong>;</li>
+<li><strong>Certificatul de înmatriculare / înregistrare</strong> al vehiculului;</li>
+<li><strong>Actul de identitate</strong> al proprietarului / utilizatorului vehiculului:
+    <ul>
+        <li>Carte de identitate – persoane fizice;</li>
+        <li>Certificat de înregistrare – persoane juridice;</li>
+    </ul>
+</li>
+<li><strong>Acordul GDPR</strong> pentru asigurat persoană fizică – 
+    <a href="https://gdpr.omniasig.ro/" target="_blank">https://gdpr.omniasig.ro/</a><br>
+    <em>După generarea acordului GDPR, este necesar să ne transmiteți documentul semnat.</em>
+</li>
+<li><strong>Calitatea solicitantului</strong> – Intermediar sau Asigurat, plus <strong>MANDAT</strong>, dacă este cazul;<br>
+    <em>Polița va fi emisă pe direct și nu va putea fi transferată în lipsa mandatului, în cazul intermediarilor.</em>
+</li>
+<li><strong>Acordul societății de leasing</strong>, în cazul în care vehiculul face obiectul unui contract de leasing;</li>
+</ol>
+
+<p><strong>Pentru operativitate</strong>, vă rugăm să păstrați în corespondență toate adresele de e-mail incluse în acest mail.</p>
+
+<h3>Acoperire teritorială – CARTE VERDE</h3>
+<p>
+Conform legislației, acoperirea este valabilă pe întreg teritoriul sistemului „CARTE VERDE”, cu excepția:
+<br>
+AL – Albania, AZ – Azerbaijan, BY – Belarus, IR – Iran, MA – Maroc,  
+MD – Moldova, MK – Macedonia, RUS – Rusia, TN – Tunisia,  
+TR – Turcia, UA – Ucraina.
+</p>
+</div>
+
+<!-- ================= FORMULAR ================= -->
+<form method="POST" enctype="multipart/form-data">
+
+<label>Nr. Caz BAAR</label>
+<input type="text" name="nr_caz_baar" required>
+
+<label>Șasiu auto</label>
+<input type="text" name="sasiu_auto" required>
+
+<label>Dată start / valabilitate poliță</label>
+<input type="date" name="data_start" required>
+
+<label>Intermediere</label>
+<select id="intermediar" name="intermediar" onchange="toggleIntermediar()" required>
+    <option value="">Selectează</option>
+    <option value="broker">Broker</option>
+    <option value="agent">Agent</option>
+    <option value="fara">Fără intermediar</option>
+</select>
+
+<div id="mandat" class="hidden">
+    <label>Mandat Broker / Agent</label>
+    <input type="file" name="mandat">
+</div>
+
+<div id="cod_raf" class="hidden">
+    <label>Cod RAF</label>
+    <input type="text" name="cod_raf">
+</div>
+
+<label>Tip proprietar</label>
+<select id="tip_proprietar" name="tip_proprietar" onchange="toggleGDPR()" required>
+    <option value="">Selectează</option>
+    <option value="pf">Persoană fizică</option>
+    <option value="pj">Persoană juridică</option>
+</select>
+
+<div id="gdpr_box" class="hidden">
+    <label>Acord GDPR – persoane fizice</label>
+    <input type="file" name="gdpr_document">
+</div>
+
+<label>Proprietar auto</label>
+<select id="proprietar" name="proprietar_auto" onchange="toggleLeasing()" required>
+    <option value="">Selectează</option>
+    <option value="proprietar">Proprietar</option>
+    <option value="leasing">Leasing</option>
+</select>
+
+<div id="leasing_doc" class="hidden">
+    <label>Împuternicire Leasing</label>
+    <input type="file" name="imputernicire_leasing">
+</div>
+
+<label>Talon / Carte vehicul</label>
+<input type="file" name="talon_carte" required>
+
+<label>CUI / CI</label>
+<input type="file" name="cui_ci" required>
+
+<label>OP – Ordin de plată</label>
+<input type="file" name="op" required>
+
+<button type="submit">Trimite documentele</button>
+
+</form>
+
+</div>
+</body>
+</html>
